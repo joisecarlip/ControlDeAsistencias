@@ -3,10 +3,10 @@
 @section('content')
 <div>
     @if(session('success'))
-        <div style="color: green; margin-bottom: 10px;">{{ session('success') }}</div>
+        <div>{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div style="color: red; margin-bottom: 10px;">{{ session('error') }}</div>
+        <div>{{ session('error') }}</div>
     @endif
 
     <button onclick="openModal(null)">Nuevo curso</button>
@@ -62,19 +62,19 @@
             <input type="hidden" id="method" name="_method" value="POST">
             <input type="hidden" id="curso_id" name="curso_id">
 
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label for="nombre_curso">Nombre del curso:</label>
-                <input type="text" id="nombre_curso" name="nombre_curso" placeholder="Nombre del curso" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <input type="text" id="nombre_curso" name="nombre_curso" placeholder="Nombre del curso" required>
             </div>
 
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label for="codigo_curso">Código del curso:</label>
-                <input type="text" id="codigo_curso" name="codigo_curso" placeholder="Código del curso" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <input type="text" id="codigo_curso" name="codigo_curso" placeholder="Código del curso" required>
             </div>
 
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label for="docente_id">Docente:</label>
-                <select id="docente_id" name="docente_id" required style="width: 100%; padding: 8px; margin-top: 5px;">
+                <select id="docente_id" name="docente_id" required>
                     <option value="">Seleccione un docente</option>
                     @foreach($docentes as $docente)
                         <option value="{{ $docente->id_usuario }}" id="docenteOption_{{ $docente->id_usuario }}">{{ $docente->nombre }} {{ $docente->apellido }}</option>
@@ -82,47 +82,47 @@
                 </select>
             </div>
 
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label for="creditos">Créditos:</label>
-                <input type="number" id="creditos" name="creditos" placeholder="Créditos" required min="1" style="width: 100%; padding: 8px; margin-top: 5px;">
+                <input type="number" id="creditos" name="creditos" placeholder="Créditos" required min="1">
             </div>
 
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label for="descripcion">Descripción (opcional):</label>
-                <textarea id="descripcion" name="descripcion" placeholder="Descripción del curso" style="width: 100%; padding: 8px; margin-top: 5px; height: 80px;"></textarea>
+                <textarea id="descripcion" name="descripcion" placeholder="Descripción del curso"></textarea>
             </div>
 
             <!-- Sección de Estudiantes -->
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label style="font-weight: bold; display: block; margin-bottom: 10px;">Estudiantes del curso:</label>
-                <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+                <div>
                     @foreach($estudiantes as $estudiante)
-                        <div style="margin-bottom: 5px;">
-                            <label style="display: flex; align-items: center; cursor: pointer;">
-                                <input type="checkbox" name="estudiantes[]" value="{{ $estudiante->id_usuario }}" class="estudiante-checkbox" style="margin-right: 8px;">
+                        <div>
+                            <label>
+                                <input type="checkbox" name="estudiantes[]" value="{{ $estudiante->id_usuario }}" class="estudiante-checkbox">
                                 {{ $estudiante->nombre }} {{ $estudiante->apellido }} ({{ $estudiante->correo }})
                             </label>
                         </div>
                     @endforeach
                 </div>
-                <div style="margin-top: 10px;">
-                    <button type="button" onclick="seleccionarTodosEstudiantes()" style="background-color: #17a2b8; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">Seleccionar Todos</button>
-                    <button type="button" onclick="deseleccionarTodosEstudiantes()" style="background-color: #6c757d; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer;">Deseleccionar Todos</button>
+                <div>
+                    <button type="button" onclick="seleccionarTodosEstudiantes()">Seleccionar Todos</button>
+                    <button type="button" onclick="deseleccionarTodosEstudiantes()">Deseleccionar Todos</button>
                 </div>
             </div>
 
             <!-- Sección de Horarios -->
-            <div style="margin-bottom: 15px;">
+            <div>
                 <label style="font-weight: bold; display: block; margin-bottom: 10px;">Horarios del curso:</label>
                 <div id="horariosContainer">
                     <!-- Los horarios se agregarán dinámicamente aquí -->
                 </div>
-                <button type="button" onclick="agregarHorario()" style="background-color: #007bff; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">Agregar Horario</button>
+                <button type="button" onclick="agregarHorario()">Agregar Horario</button>
             </div>
 
-            <div style="text-align: right; margin-top: 20px;">
-                <button type="button" onclick="closeModal()" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">Cancelar</button>
-                <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Guardar</button>
+            <div>
+                <button type="button" onclick="closeModal()">Cancelar</button>
+                <button type="submit">Guardar</button>
             </div>
         </form>
     </div>
@@ -135,8 +135,8 @@
         <div id="contenidoEstudiantes">
             <!-- El contenido se cargará dinámicamente -->
         </div>
-        <div style="text-align: right; margin-top: 20px;">
-            <button type="button" onclick="cerrarModalEstudiantes()" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
+        <div>
+            <button type="button" onclick="cerrarModalEstudiantes()">Cerrar</button>
         </div>
     </div>
 </div>
@@ -248,13 +248,12 @@
     function agregarHorario(diaSeleccionado = '', horaInicio = '', horaFin = '') {
         const container = document.getElementById('horariosContainer');
         const horarioDiv = document.createElement('div');
-        horarioDiv.style.cssText = 'border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; background-color: #f9f9f9;';
         
         horarioDiv.innerHTML = `
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 150px;">
+            <div>
+                <div>
                     <label>Día de la semana:</label>
-                    <select name="horarios[${horarioIndex}][dia_semana]" style="width: 100%; padding: 5px; margin-top: 3px;">
+                    <select name="horarios[${horarioIndex}][dia_semana]">
                         <option value="">Seleccione un día</option>
                         <option value="Lunes" ${diaSeleccionado === 'Lunes' ? 'selected' : ''}>Lunes</option>
                         <option value="Martes" ${diaSeleccionado === 'Martes' ? 'selected' : ''}>Martes</option>
@@ -265,16 +264,16 @@
                         <option value="Domingo" ${diaSeleccionado === 'Domingo' ? 'selected' : ''}>Domingo</option>
                     </select>
                 </div>
-                <div style="flex: 1; min-width: 120px;">
+                <div>
                     <label>Hora inicio:</label>
-                    <input type="time" name="horarios[${horarioIndex}][hora_inicio]" value="${horaInicio}" style="width: 100%; padding: 5px; margin-top: 3px;">
+                    <input type="time" name="horarios[${horarioIndex}][hora_inicio]" value="${horaInicio}">
                 </div>
-                <div style="flex: 1; min-width: 120px;">
+                <div>
                     <label>Hora fin:</label>
-                    <input type="time" name="horarios[${horarioIndex}][hora_fin]" value="${horaFin}" style="width: 100%; padding: 5px; margin-top: 3px;">
+                    <input type="time" name="horarios[${horarioIndex}][hora_fin]" value="${horaFin}">
                 </div>
-                <div style="margin-top: 20px;">
-                    <button type="button" onclick="eliminarHorario(this)" style="background-color: #dc3545; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer;">Eliminar</button>
+                <div>
+                    <button type="button" onclick="eliminarHorario(this)">Eliminar</button>
                 </div>
             </div>
         `;
@@ -284,7 +283,7 @@
     }
 
     function eliminarHorario(button) {
-        button.closest('div').parentNode.parentNode.remove();
+        button.closest('div').parentNode.remove();
     }
 </script>
 @endpush
