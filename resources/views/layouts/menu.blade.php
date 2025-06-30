@@ -30,7 +30,7 @@
                 @elseif ($rol === 'administrador')
                     <li><a href="{{ url('/admin/inicio') }}"><i></i> Inicio </a></li>
                     <li><a href="{{ route('usuarios.index') }}"><i></i> Gestión de Usuarios </a></li>
-                    <li><a href="#"><i></i> Gestión de Cursos </a></li>
+                    <li><a href="{{ route('cursos.index') }}"><i></i> Gestión de Cursos </a></li>
                     <li><a href="#"><i></i> Reportes </a></li>
 
                 @endif
