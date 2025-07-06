@@ -1,61 +1,244 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Control de Asistencias 📋
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de control de asistencias desarrollado en Laravel con Docker para una fácil instalación y despliegue.
 
-## About Laravel
+## 🚀 Características
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Sistema de registro de asistencias
+- Gestión de usuarios
+- Panel de administración
+- Reportes de asistencia
+- Interfaz web responsiva
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Prerrequisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Antes de comenzar, asegúrate de tener instalado:
 
-## Learning Laravel
+- [Git](https://git-scm.com/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Instalación
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clonar el repositorio
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/joisecarlip/ControlDeAsistencias.git
+cd ControlDeAsistencias
+```
 
-## Laravel Sponsors
+### 2. Configurar variables de entorno
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+> **Nota:** Edita el archivo `.env` con la configuración de tu base de datos y otros parámetros necesarios.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 3. Construir y levantar los contenedores
 
-## Contributing
+```bash
+# Construir e iniciar los contenedores en segundo plano
+docker-compose up -d --build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Configurar la aplicación Laravel
 
-## Code of Conduct
+Accede al contenedor de la aplicación:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker-compose exec app bash
+```
 
-## Security Vulnerabilities
+Dentro del contenedor, ejecuta los siguientes comandos:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Instalar dependencias de Composer
+composer install --optimize-autoloader --no-dev
 
-## License
+# Generar clave de aplicación
+php artisan key:generate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Configurar permisos
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
+# Limpiar caché
+php artisan config:clear
+php artisan cache:clear
+
+# Ejecutar migraciones y seeders
+php artisan migrate
+php artisan db:seed
+```
+
+### 5. Verificar la instalación
+
+```bash
+# Verificar que los contenedores estén ejecutándose
+docker-compose ps
+```
+
+## 🔧 Comandos útiles
+
+### Gestión de contenedores
+
+```bash
+# Iniciar los contenedores
+docker-compose up -d
+
+# Detener los contenedores
+docker-compose down
+
+# Detener y eliminar volúmenes (¡CUIDADO! Esto eliminará los datos)
+docker-compose down -v
+
+# Ver logs de los contenedores
+docker-compose logs
+
+# Acceder al contenedor de la aplicación
+docker-compose exec app bash
+```
+
+### Comandos de Laravel
+
+```bash
+# Ejecutar migraciones
+php artisan migrate
+
+# Ejecutar seeders
+php artisan db:seed
+
+# Crear nueva migración
+php artisan make:migration nombre_de_la_migracion
+
+# Limpiar caché
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+## 📁 Estructura del proyecto
+
+```
+ControlDeAsistencias/
+├── app/                    # Código de la aplicación
+├── config/                 # Archivos de configuración
+├── database/              # Migraciones y seeders
+├── docker-compose.yml     # Configuración de Docker
+├── public/                # Archivos públicos
+├── resources/             # Vistas, CSS, JS
+├── routes/                # Rutas de la aplicación
+├── storage/               # Archivos de almacenamiento
+├── .env.example          # Ejemplo de variables de entorno
+└── README.md             # Este archivo
+```
+
+## 🌐 Acceso a la aplicación
+
+Una vez instalado, puedes acceder a la aplicación en:
+
+- **Aplicación web:** `http://localhost:8000`
+- **Base de datos:** `localhost:3306` (si usas MySQL)
+
+## 🔒 Configuración de seguridad
+
+### Variables de entorno importantes
+
+Asegúrate de configurar estas variables en tu archivo `.env`:
+
+```env
+APP_NAME="Control de Asistencias"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=control_asistencias
+DB_USERNAME=usuario
+DB_PASSWORD=contraseña_segura
+```
+
+## 🐛 Solución de problemas
+
+### Error de permisos
+
+Si encuentras errores de permisos, ejecuta:
+
+```bash
+docker-compose exec app bash
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+
+### Error de conexión a base de datos
+
+1. Verifica que el contenedor de base de datos esté ejecutándose:
+   ```bash
+   docker-compose ps
+   ```
+
+2. Revisa la configuración en el archivo `.env`
+
+3. Reinicia los contenedores:
+   ```bash
+   docker-compose down
+   docker-compose up -d
+   ```
+
+### Limpiar instalación
+
+Para empezar desde cero:
+
+```bash
+docker-compose down -v
+docker-compose up -d --build
+```
+
+## 📝 Desarrollo
+
+### Agregar nuevas funcionalidades
+
+1. Crea una nueva rama:
+   ```bash
+   git checkout -b feature/nueva-funcionalidad
+   ```
+
+2. Realiza los cambios necesarios
+
+3. Ejecuta las pruebas:
+   ```bash
+   docker-compose exec app php artisan test
+   ```
+
+4. Commit y push:
+   ```bash
+   git add .
+   git commit -m "Descripción de los cambios"
+   git push origin feature/nueva-funcionalidad
+   ```
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature
+3. Commit tus cambios
+4. Push a la rama
+5. Abre un Pull Request
+
+## 📞 Soporte
+
+Si tienes alguna pregunta o problema, por favor abre un issue en el repositorio de GitHub.
+
+---
+
+**Desarrollado con ❤️ usando Laravel y Docker**
