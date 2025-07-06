@@ -1,166 +1,133 @@
-# Control de Asistencias 📋
+# 🎯 Control de Asistencias Laravel + Docker
 
-Sistema de control de asistencias desarrollado en Laravel con Docker para una fácil instalación y despliegue.
+<div align="center">
+  <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+  <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+</div>
 
-## 🚀 Características
+---
 
-- Sistema de registro de asistencias
-- Gestión de usuarios
-- Panel de administración
-- Reportes de asistencia
-- Interfaz web responsiva
+## 📦 Instalación Rápida
 
-## 📋 Prerrequisitos
+<table>
+<tr>
+<td>
 
-Antes de comenzar, asegúrate de tener instalado:
-
-- [Git](https://git-scm.com/)
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-
-## 🛠️ Instalación
-
-### 1. Clonar el repositorio
-
+### 🔽 **Paso 1: Clonar**
 ```bash
-git clone https://github.com/joisecarlip/ControlDeAsistencias.git
-cd ControlDeAsistencias
+git clone https://github.com/joisecarlip/ControlDeAsistencias.git Sistema-De-Asistencias
+cd Sistema-De-Asistencias
 ```
 
-### 2. Configurar variables de entorno
+</td>
+<td>
 
+### ⚙️ **Paso 2: Configurar**
 ```bash
 cp .env.example .env
 ```
 
-> **Nota:** Edita el archivo `.env` con la configuración de tu base de datos y otros parámetros necesarios.
+</td>
+</tr>
+<tr>
+<td>
 
-### 3. Construir y levantar los contenedores
-
+### 🐳 **Paso 3: Docker**
 ```bash
-# Construir e iniciar los contenedores en segundo plano
 docker-compose up -d --build
 ```
 
-### 4. Configurar la aplicación Laravel
+</td>
+<td>
 
-Accede al contenedor de la aplicación:
-
+### 🚀 **Paso 4: Laravel**
 ```bash
 docker-compose exec app bash
 ```
 
-Dentro del contenedor, ejecuta los siguientes comandos:
+</td>
+</tr>
+</table>
+
+### 🔧 **Configuración Laravel (dentro del contenedor)**
 
 ```bash
-# Instalar dependencias de Composer
+# 📥 Instalar dependencias
 composer install --optimize-autoloader --no-dev
 
-# Generar clave de aplicación
+# 🔑 Generar clave
 php artisan key:generate
 
-# Configurar permisos
+# 📁 Configurar permisos
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# Limpiar caché
-php artisan config:clear
-php artisan cache:clear
+# 🧹 Limpiar caché
+php artisan config:clear && php artisan cache:clear
 
-# Ejecutar migraciones y seeders
-php artisan migrate
-php artisan db:seed
+# 🗃️ Base de datos
+php artisan migrate && php artisan db:seed
 ```
 
-### 5. Verificar la instalación
+<div align="center">
+  <h3>🎉 ¡Listo! Tu aplicación está en <code>http://localhost:8000</code></h3>
+</div>
+
+## 🎛️ Comandos Útiles
+
+<details>
+<summary><b>🐳 Gestión de Docker</b></summary>
 
 ```bash
-# Verificar que los contenedores estén ejecutándose
-docker-compose ps
-```
-
-## 🔧 Comandos útiles
-
-### Gestión de contenedores
-
-```bash
-# Iniciar los contenedores
+# ▶️ Iniciar contenedores
 docker-compose up -d
 
-# Detener los contenedores
+# ⏹️ Detener contenedores
 docker-compose down
 
-# Detener y eliminar volúmenes (¡CUIDADO! Esto eliminará los datos)
+# 🗑️ Eliminar todo (¡CUIDADO!)
 docker-compose down -v
 
-# Ver logs de los contenedores
+# 👀 Ver logs
 docker-compose logs
 
-# Acceder al contenedor de la aplicación
+# 🔍 Estado de contenedores
+docker-compose ps
+
+# 💻 Acceder al contenedor
 docker-compose exec app bash
 ```
 
-### Comandos de Laravel
+</details>
+
+<details>
+<summary><b>🎨 Comandos Laravel</b></summary>
 
 ```bash
-# Ejecutar migraciones
+# 🗃️ Migraciones
 php artisan migrate
+php artisan migrate:fresh --seed
 
-# Ejecutar seeders
-php artisan db:seed
-
-# Crear nueva migración
-php artisan make:migration nombre_de_la_migracion
-
-# Limpiar caché
+# 🧹 Limpiar caché
 php artisan cache:clear
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 ```
 
-## 📁 Estructura del proyecto
+</details>
 
-```
-ControlDeAsistencias/
-├── app/                    # Código de la aplicación
-├── config/                 # Archivos de configuración
-├── database/              # Migraciones y seeders
-├── docker-compose.yml     # Configuración de Docker
-├── public/                # Archivos públicos
-├── resources/             # Vistas, CSS, JS
-├── routes/                # Rutas de la aplicación
-├── storage/               # Archivos de almacenamiento
-├── .env.example          # Ejemplo de variables de entorno
-└── README.md             # Este archivo
-```
+
 
 ## 🌐 Acceso a la aplicación
 
 Una vez instalado, puedes acceder a la aplicación en:
 
 - **Aplicación web:** `http://localhost:8000`
-- **Base de datos:** `localhost:3306` (si usas MySQL)
 
-## 🔒 Configuración de seguridad
 
-### Variables de entorno importantes
-
-Asegúrate de configurar estas variables en tu archivo `.env`:
-
-```env
-APP_NAME="Control de Asistencias"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=control_asistencias
-DB_USERNAME=usuario
-DB_PASSWORD=contraseña_segura
-```
 
 ## 🐛 Solución de problemas
 
@@ -198,47 +165,12 @@ docker-compose down -v
 docker-compose up -d --build
 ```
 
-## 📝 Desarrollo
+## 🚀 Desarrollo
 
-### Agregar nuevas funcionalidades
+<div align="center">
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git">
+  <img src="https://img.shields.io/badge/Composer-885630?style=for-the-badge&logo=composer&logoColor=white" alt="Composer">
+  <img src="https://img.shields.io/badge/Artisan-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Artisan">
+</div>
 
-1. Crea una nueva rama:
-   ```bash
-   git checkout -b feature/nueva-funcionalidad
-   ```
-
-2. Realiza los cambios necesarios
-
-3. Ejecuta las pruebas:
-   ```bash
-   docker-compose exec app php artisan test
-   ```
-
-4. Commit y push:
-   ```bash
-   git add .
-   git commit -m "Descripción de los cambios"
-   git push origin feature/nueva-funcionalidad
-   ```
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 🤝 Contribución
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature
-3. Commit tus cambios
-4. Push a la rama
-5. Abre un Pull Request
-
-## 📞 Soporte
-
-Si tienes alguna pregunta o problema, por favor abre un issue en el repositorio de GitHub.
-
----
-
-**Desarrollado con ❤️ usando Laravel y Docker**
+**🚀 ¡Proyecto listo para producción con Laravel y Docker!**
