@@ -35,5 +35,27 @@ class Usuario extends Authenticatable
         return 'id_usuario';
     }
 
+    public function cursosComoDocente()
+    {
+        return $this->hasMany(Curso::class, 'id_docente', 'id_usuario');
+    }
+
+
+    public function cursosComoEstudiante()
+    {
+        return $this->belongsToMany(Curso::class, 'estudiante_curso', 'id_estudiante', 'id_curso');
+    }
+
+
+    public function asistenciasComoEstudiante()
+    {
+        return $this->hasMany(Asistencia::class, 'id_estudiante', 'id_usuario');
+    }
+
+    public function asistenciasComoDocente()
+    {
+        return $this->hasMany(Asistencia::class, 'id_docente', 'id_usuario');
+    }
+
     public $timestamps = false;
 }

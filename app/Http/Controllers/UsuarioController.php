@@ -90,4 +90,39 @@ class UsuarioController extends Controller
         Usuario::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Usuario eliminado correctamente.');
     }
+
+    public function inicio()
+    {
+        $user = Auth::guard('usuarios')->user();
+
+        // Totales para la gráfica de asistencias (últimos 7 días)
+        $fechas = [];
+        $asistencias = [];
+        $tardanzas = [];
+        $faltas = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $fecha = Carbon::today()->subDays($i)->toDateString();
+            $fechas[] = $fecha;
+
+            $asistencias[] = DB::table('asistencias')->where('fecha', $fecha)->where('estado', 'presente')->count();
+            $tardanzas[]   = DB::table('asistencias')->where('fecha', $fecha)->where('estado', 'tardanza')->count();
+            $faltas[]      = DB::table('asistencias')->where('fecha', $fecha)->where('estado', 'ausente')->count();
+        }
+
+        $totalUsuarios = \App\Models\Usuario::count();
+        $totalAdmin = \App\Models\Usuario::where('rol', 'administrador')->count();
+        $totalDocente = \App\Models\Usuario::where('rol', 'docente')->count();
+        $totalEstudiante = \App\Models\Usuario::where('rol', 'estudiante')->count();
+
+        switch ($user->rol) {
+            case 'administrador':
+                return view('admin.dashboard', compact('user', 'fechas', 'asistencias', 'tardanzas', 'faltas'));
+            case 'docente':
+                return view('docente.dashboard', compact('user'));
+            case 'estudiante':
+            default:
+                return view('estudiante.dashboard', compact('user'));
+        }
+    }
 }

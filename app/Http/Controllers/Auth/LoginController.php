@@ -27,7 +27,7 @@ class LoginController extends Controller
 
     public function MostrarFormularioLogin()
     {
-        return view('auth.login');
+        return view('auth.Login');
     }
 
     public function login(Request $request)

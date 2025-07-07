@@ -34,8 +34,17 @@ class CursoController extends Controller
             'horarios' => 'nullable|array',
             'horarios.*.dia_semana' => 'required_with:horarios|in:Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo',
             'horarios.*.hora_inicio' => 'required_with:horarios|date_format:H:i',
-            'horarios.*.hora_fin' => 'required_with:horarios|date_format:H:i|after:horarios.*.hora_inicio',
+            'horarios.*.hora_fin' => 'required_with:horarios.*.hora_inicio|date_format:H:i',
         ]);
+
+        if ($request->has('horarios')) {
+            foreach ($request->horarios as $i => $h) {
+                if (!empty($h['hora_inicio']) && !empty($h['hora_fin']) && $h['hora_fin'] <= $h['hora_inicio']) {
+                    return redirect()->back()->with('error', "En el horario #".($i+1).", la hora de fin debe ser mayor que la de inicio.");
+                }
+            }
+        }
+
 
         DB::beginTransaction();
         
@@ -100,9 +109,17 @@ class CursoController extends Controller
             'horarios' => 'nullable|array',
             'horarios.*.dia_semana' => 'required_with:horarios|in:Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo',
             'horarios.*.hora_inicio' => 'required_with:horarios|date_format:H:i',
-            'horarios.*.hora_fin' => 'required_with:horarios|date_format:H:i|after:horarios.*.hora_inicio',
+            'horarios.*.hora_fin' => 'required_with:horarios.*.hora_inicio|date_format:H:i',
         ]);
 
+        if ($request->has('horarios')) {
+            foreach ($request->horarios as $i => $h) {
+                if (!empty($h['hora_inicio']) && !empty($h['hora_fin']) && $h['hora_fin'] <= $h['hora_inicio']) {
+                    return redirect()->back()->with('error', "En el horario #".($i+1).", la hora de fin debe ser mayor que la de inicio.");
+                }
+            }
+        }
+        
         DB::beginTransaction();
 
         try {

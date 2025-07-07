@@ -1,42 +1,67 @@
 @extends('layouts.menu')
 
 @section('content')
-<div>
+
+<div class="container">
     @if(session('success'))
-        <div>{{ session('success') }}</div>
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
     @if(session('error'))
-        <div>{{ session('error') }}</div>
+        <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <div>
-        <h5>Usuarios:</h5>
-        <ul>
-            <li><strong>Total:</strong> {{ $total }}</li>
-            <li><strong>Administradores:</strong> {{ $totalAdmin }}</li>
-            <li><strong>Docentes:</strong> {{ $totalDocente }}</li>
-            <li><strong>Estudiantes:</strong> {{ $totalEstudiante }}</li>
-        </ul>
+    <div class="row mb-4 text-center">
+        <div class="col-md-3">
+            <div class="p-3 bg-light border rounded">
+                <strong>Total Usuarios</strong>
+                <div class="fs-4">{{ $total }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 bg-light border rounded text-primary">
+                <strong>Administradores</strong>
+                <div class="fs-4">{{ $totalAdmin }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 bg-light border rounded text-info">
+                <strong>Docentes</strong>
+                <div class="fs-4">{{ $totalDocente }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 bg-light border rounded text-success">
+                <strong>Estudiantes</strong>
+                <div class="fs-4">{{ $totalEstudiante }}</div>
+            </div>
+        </div>
     </div>
 
 
+    <!-- Botón nuevo usuario -->
+    <button class="btn btn-primary mb-3" onclick="openModal(null)">Nuevo usuario</button>
 
-    <button onclick="openModal(null)">Nuevo usuario</button>
-
-    <form method="GET" action="{{ route('usuarios.index') }}" id="filterForm">
-        <select name="rol" onchange="document.getElementById('filterForm').submit()">
-            <option value="">Todos</option>
-            <option value="administrador" {{ request('rol') == 'administrador' ? 'selected' : '' }}>Administrador</option>
-            <option value="docente" {{ request('rol') == 'docente' ? 'selected' : '' }}>Docente</option>
-            <option value="estudiante" {{ request('rol') == 'estudiante' ? 'selected' : '' }}>Estudiante</option>
-        </select>
-
-        <input type="text" name="nombre" placeholder="Buscar por nombre" value="{{ request('nombre') }}">
-        <button type="submit">Buscar</button>
+    <!-- Filtros -->
+    <form method="GET" action="{{ route('usuarios.index') }}" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <select name="rol" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="administrador" {{ request('rol') == 'administrador' ? 'selected' : '' }}>Administrador</option>
+                <option value="docente" {{ request('rol') == 'docente' ? 'selected' : '' }}>Docente</option>
+                <option value="estudiante" {{ request('rol') == 'estudiante' ? 'selected' : '' }}>Estudiante</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request('nombre') }}">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        </div>
     </form>
 
-    <table>
-        <thead>
+    <!-- Tabla -->
+    <table class="table table-hover text-center">
+        <thead class="table-primary">
             <tr>
                 <th>Nombre</th>
                 <th>Rol</th>
@@ -52,13 +77,17 @@
                     <td>{{ $usuario->rol }}</td>
                     <td>{{ $usuario->correo }}</td>
                     <td>
-                        <button onclick="openModal({{ $usuario->id_usuario }})">Editar</button>
+                        <button class="btn btn-link p-0" onclick="openModal({{ $usuario->id_usuario }})">
+                            <i class="fa fa-pencil-alt text-primary fs-5"></i>
+                        </button>
                     </td>
                     <td>
                         <form method="POST" action="{{ route('usuarios.destroy', $usuario->id_usuario) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Desea eliminar este usuario?')">Eliminar</button>
+                            <button type="submit" onclick="return confirm('¿Desea eliminar este usuario?')" class="btn btn-link p-0">
+                                <i class="bx bx-trash-alt text-danger fs-4"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>
@@ -68,40 +97,64 @@
         </tbody>
     </table>
 
+    <!-- Paginación -->
     {{ $usuarios->links() }}
 </div>
 
-{{-- Modal manual básico --}}
-<div id="modal" style="display: none;">
-    <form id="userForm" method="POST">
-        @csrf
-        <input type="hidden" id="method" name="_method" value="POST">
-        <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
-        <input type="text" id="apellido" name="apellido" placeholder="Apellido" required>
-        <select id="rol" name="rol" required>
-            <option value="">Rol</option>
-            <option value="administrador">Administrador</option>
-            <option value="docente">Docente</option>
-            <option value="estudiante">Estudiante</option>
-        </select>
-        <input type="email" id="correo" name="correo" placeholder="Correo" required>
-        <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña">
-        <input type="password" id="contrasena_confirmation" name="contrasena_confirmation" placeholder="Confirmar contraseña">
+<!-- Modal -->
+<div id="modal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="userForm" method="POST">
+                @csrf
+                <input type="hidden" id="method" name="_method" value="POST">
 
-        <button type="button" onclick="closeModal()">Cancelar</button>
-        <button type="submit">Guardar</button>
-    </form>
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Usuario</h5>
+                    <button type="button" class="btn-close" onclick="closeModal()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <select id="rol" name="rol" class="form-select" required>
+                            <option value="">Seleccione un rol</option>
+                            <option value="administrador">Administrador</option>
+                            <option value="docente">Docente</option>
+                            <option value="estudiante">Estudiante</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="Contraseña">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" id="contrasena_confirmation" name="contrasena_confirmation" class="form-control" placeholder="Confirmar contraseña">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
 @endsection
 
 @push('scripts')
 <script>
     function openModal(usuarioId) {
-        const modal = document.getElementById('modal');
+        const modal = new bootstrap.Modal(document.getElementById('modal'));
         const form = document.getElementById('userForm');
         const methodInput = document.getElementById('method');
-        const passwordInput = document.getElementById('contrasena');
-        const confirmPasswordInput = document.getElementById('contrasena_confirmation');
 
         if (usuarioId) {
             fetch(`/usuarios/${usuarioId}/edit`)
@@ -113,21 +166,23 @@
                     document.getElementById('apellido').value = usuario.apellido;
                     document.getElementById('rol').value = usuario.rol;
                     document.getElementById('correo').value = usuario.correo;
-                    passwordInput.value = '';
-                    confirmPasswordInput.value = '';
-                    modal.style.display = 'block';
+                    document.getElementById('contrasena').value = '';
+                    document.getElementById('contrasena_confirmation').value = '';
+                    modal.show();
                 })
                 .catch(() => alert('Error al cargar los datos'));
         } else {
             form.action = `/usuarios`;
             methodInput.value = 'POST';
             form.reset();
-            modal.style.display = 'block';
+            modal.show();
         }
     }
 
     function closeModal() {
-        document.getElementById('modal').style.display = 'none';
+        const modalElement = document.getElementById('modal');
+        const modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
     }
 </script>
 @endpush

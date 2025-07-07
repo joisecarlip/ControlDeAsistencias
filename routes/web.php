@@ -7,6 +7,7 @@ use App\Http\Middleware\RolMiddleware;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CursoController;
+use App\Http\Controllers\AsistenciaController;
 
 // LOGIN
 Route::get('/', [LoginController::class, 'MostrarFormularioLogin'])->name('login');
@@ -57,4 +58,20 @@ Route::middleware(['auth:usuarios', RolMiddleware::class . ':administrador'])->g
     Route::post('/cursos/{id}/agregar-estudiante', [CursoController::class, 'agregarEstudiante'])->name('cursos.agregarEstudiante');
     Route::delete('/cursos/{cursoId}/quitar-estudiante/{estudianteId}', [CursoController::class, 'quitarEstudiante'])->name('cursos.quitarEstudiante');
 });
+
+# Asistencias
+
+Route::middleware(['auth:usuarios', RolMiddleware::class . ':docente'])->group(function () {
+    Route::prefix('docente')->name('docente.')->group(function () {
+        Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
+        Route::get('/asistencias/estudiantes/{id_curso}', [AsistenciaController::class, 'mostrarEstudiantes'])->name('asistencias.estudiantes');
+        Route::post('/asistencias/curso/{id_curso}', [AsistenciaController::class, 'guardarAsistencia'])->name('asistencias.guardar');
+        Route::get('/asistencias/historial/{id_curso}', [AsistenciaController::class, 'historial'])->name('asistencias.historial');
+        Route::get('/asistencias/cursos', function () {
+            $docente = Auth::user();
+            $cursos = $docente->cursosComoDocente()->withCount('estudiantes')->get();
+            return response()->json($cursos);});
+    });
+});
+
 

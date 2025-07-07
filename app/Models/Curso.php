@@ -54,6 +54,11 @@ class Curso extends Model
     {
         return self::with(['docentes', 'estudiantesCurso', 'horariosCurso'])->get();
     }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'id_curso', 'id_curso');
+    }
 }
 
 class Horario extends Model
