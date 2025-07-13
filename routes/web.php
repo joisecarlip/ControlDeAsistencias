@@ -8,6 +8,10 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\CursoDocenteController;
+use App\Http\Controllers\ReporteDocenteController;
+use App\Http\Controllers\AsistenciaEstudianteController;
 
 // LOGIN
 Route::get('/', [LoginController::class, 'MostrarFormularioLogin'])->name('login');
@@ -15,16 +19,22 @@ Route::get('/login', [LoginController::class, 'MostrarFormularioLogin'])->name('
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// DASHBOARD
 Route::middleware(['auth:usuarios', RolMiddleware::class . ':administrador'])->group(function () {
     Route::get('/admin/inicio', [LoginController::class, 'inicio'])->name('admin.inicio');
+    Route::get('/admin/reportes', [ReporteController::class, 'index'])->name('admin.reportes');
 });
 
 Route::middleware(['auth:usuarios', RolMiddleware::class . ':docente'])->group(function () {
     Route::get('/docente/inicio', [LoginController::class, 'inicio'])->name('docente.inicio');
+    Route::get('/docente/cursos', [CursoDocenteController::class, 'index'])->name('docente.cursos');
+    Route::get('/reporte-docente', [ReporteDocenteController::class, 'index'])->name('docente.reporte');
 });
 
 Route::middleware(['auth:usuarios', RolMiddleware::class . ':estudiante'])->group(function () {
     Route::get('/estudiante/inicio', [LoginController::class, 'inicio'])->name('estudiante.inicio');
+    Route::get('/estudiante/asistencias', [AsistenciaEstudianteController::class, 'index'])->name('estudiante.asistencias');
+    Route::get('/estudiante/cursos', [AsistenciaEstudianteController::class, 'cursos'])->name('estudiante.cursos');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -74,4 +84,6 @@ Route::middleware(['auth:usuarios', RolMiddleware::class . ':docente'])->group(f
     });
 });
 
+
+# Reportes
 

@@ -73,7 +73,7 @@
                         Bienvenido al Sistema
                     </h5>
                     <p class="text-muted mb-0 fs-6">
-                        Tu perfil está configurado correctamente. Puedes navegar por las diferentes secciones del sistema.
+                        Sistema de Control de Asistencias para Estudiantes.
                     </p>
                 </div>
             </div>

@@ -1,24 +1,28 @@
 @extends('layouts.menu')
 
 @section('content')
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 text-dark mb-1" style="font-family: 'Poppins', sans-serif;">Gestión de Cursos</h1>
+        </div>
+    </div>
 
-<div class="container">
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-
-    <div class="row mb-4 text-center">
-        <div class="col-md-12">
-            <div class="p-3 bg-light border rounded">
-                <strong>Total Cursos</strong>
-                <div class="fs-4">{{ $cursos->count() }}</div>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Cursos</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $cursos->count() }}</div>
+                    </div>
+                    <i class="bx bx-book fa-2x text-gray-300"></i>
+                </div>
             </div>
         </div>
     </div>
 
+    
     <!-- Botón nuevo curso -->
     <button class="btn btn-primary mb-3" onclick="openModal(null)">Nuevo curso</button>
 
@@ -31,64 +35,85 @@
             <input type="text" name="codigo" class="form-control" placeholder="Buscar por código" value="{{ request('codigo') }}">
         </div>
         <div class="col-md-4">
-            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            <button type="submit" class="btn btn-outline-primary w-100"> <i class="bx bx-search"></i> Buscar</button>
         </div>
     </form>
 
-    <!-- Tabla -->
-    <table class="table table-hover text-center">
-        <thead class="table-primary">
-            <tr>
-                <th>Nombre</th>
-                <th>Código</th>
-                <th>Docente</th>
-                <th>Estudiantes</th>
-                <th>Créditos</th>
-                <th>Horario</th>
-                <th>Gestionar</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($cursos as $curso)
-                <tr>
-                    <td>{{ $curso->nombre_curso }}</td>
-                    <td>{{ $curso->codigo_curso }}</td>
-                    <td>{{ $curso->docente ? $curso->docente->nombre : 'Sin docente' }}</td>
-                    <td>{{ $curso->estudiantes->count() }}</td>
-                    <td>{{ $curso->creditos }}</td>
-                    <td>
-                        @foreach($curso->horarios as $horario)
-                            <small>{{ $horario->dia_semana }} - {{ $horario->hora_inicio }} - {{ $horario->hora_fin }}</small><br>
-                        @endforeach
-                    </td>
-                    <td>
-                        <button class="btn btn-link p-0" onclick="window.location.href='{{ route('cursos.gestionarEstudiantes', $curso->id_curso) }}'">
-                            <i class="fa fa-users text-info fs-5"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-link p-0" onclick="openModal({{ $curso->id_curso }})">
-                            <i class="fa fa-pencil-alt text-primary fs-5"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <form method="POST" action="{{ route('cursos.destroy', $curso->id_curso) }}" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este curso?')" class="btn btn-link p-0">
-                                <i class="bx bx-trash-alt text-danger fs-4"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="9">No hay cursos</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+    <!-- Tarjetas de cursos -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Listado de Cursos</h6>
+                </div>
+                <div class="card-body">
+                    @if($cursos->count() > 0)
+                        <div class="row">
+                            @foreach($cursos as $curso)
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card border-left-success h-100 shadow">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h6 class="font-weight-bold text-dark mb-0">{{ $curso->nombre_curso }}</h6>
+                                                <span class="badge badge-outline-primary">{{ $curso->creditos }} créditos</span>
+                                            </div>
+                                            <p class="text-muted small mb-1">Código: {{ $curso->codigo_curso }}</p>
 
+                                            @if($curso->horarios && $curso->horarios->count())
+                                                <div class="text-xs text-muted mb-2">
+                                                    @foreach($curso->horarios as $horario)
+                                                        <div>{{ $horario->dia_semana }}: {{ $horario->hora_inicio }} - {{ $horario->hora_fin }}</div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            <p class="text-sm text-gray-600 mb-3">
+                                                {{ Str::limit($curso->descripcion, 80) }}
+                                            </p>
+
+                                            <div class="row mb-3">
+                                                <div class="col-6">
+                                                    <div class="text-xs text-muted">Estudiantes</div>
+                                                    <div class="font-weight-bold">{{ $curso->estudiantes->count() }}</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-3 d-flex justify-content-end gap-2">
+                                                <button class="btn btn-outline-info btn-sm"
+                                                        onclick="window.location.href='{{ route('cursos.gestionarEstudiantes', $curso->id_curso) }}'">
+                                                    <i class="fa fa-users"></i>
+                                                </button>
+
+                                                <button class="btn btn-outline-primary btn-sm" onclick="openModal({{ $curso->id_curso }})">
+                                                    <i class="fa fa-pencil-alt"></i>
+                                                </button>
+
+                                                <form method="POST"
+                                                    action="{{ route('cursos.destroy', $curso->id_curso) }}"
+                                                    onsubmit="return confirm('¿Eliminar este curso?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-outline-danger btn-sm">
+                                                        <i class="bx bx-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <i class="bx bx-book fa-3x text-gray-300 mb-3"></i>
+                            <p class="text-muted">No tienes cursos registrados</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -183,6 +208,17 @@
         </div>
     </div>
 </div>
+
+<style>
+    .border-left-primary { border-left: 0.25rem solid #4e73df !important; }
+    .border-left-success { border-left: 0.25rem solid #1cc88a !important; }
+    .text-xs { font-size: .75rem; }
+    .badge-outline-primary {
+        color: #4e73df;
+        border: 1px solid #4e73df;
+        background-color: transparent;
+    }
+</style>
 
 @endsection
 

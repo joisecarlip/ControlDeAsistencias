@@ -2,7 +2,8 @@
 
 @section('content')
 
-<div class="container">
+<div class="container-fluid">
+    <!-- Mensajes -->
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -10,36 +11,67 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <div class="row mb-4 text-center">
-        <div class="col-md-3">
-            <div class="p-3 bg-light border rounded">
-                <strong>Total Usuarios</strong>
-                <div class="fs-4">{{ $total }}</div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 text-dark mb-1" style="font-family: 'Poppins', sans-serif;">Gestión de Usuarios</h1>
+        </div>
+    </div>
+
+    <!-- Tarjetas -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Usuarios</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $total }}</div>
+                    </div>
+                    <i class="bx bx-user text-gray-300 fa-2x"></i>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 bg-light border rounded text-primary">
-                <strong>Administradores</strong>
-                <div class="fs-4">{{ $totalAdmin }}</div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Administradores</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalAdmin }}</div>
+                    </div>
+                    <i class="bx bx-shield-quarter text-gray-300 fa-2x"></i>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 bg-light border rounded text-info">
-                <strong>Docentes</strong>
-                <div class="fs-4">{{ $totalDocente }}</div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Docentes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalDocente }}</div>
+                    </div>
+                    <i class="bx bx-chalkboard text-gray-300 fa-2x"></i>
+                </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="p-3 bg-light border rounded text-success">
-                <strong>Estudiantes</strong>
-                <div class="fs-4">{{ $totalEstudiante }}</div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Estudiantes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalEstudiante }}</div>
+                    </div>
+                    <i class="bx bxs-graduation text-gray-300 fa-2x"></i>
+                </div>
             </div>
         </div>
     </div>
 
-
     <!-- Botón nuevo usuario -->
-    <button class="btn btn-primary mb-3" onclick="openModal(null)">Nuevo usuario</button>
+    <button class="btn btn-primary mb-3" onclick="openModal(null)">
+        <i class="bx bx-plus"></i> Nuevo usuario
+    </button>
 
     <!-- Filtros -->
     <form method="GET" action="{{ route('usuarios.index') }}" class="row g-2 mb-4">
@@ -55,47 +87,51 @@
             <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ request('nombre') }}">
         </div>
         <div class="col-md-4">
-            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            <button type="submit" class="btn btn-outline-primary w-100">
+                <i class="bx bx-search"></i> Buscar
+            </button>
         </div>
     </form>
 
     <!-- Tabla -->
-    <table class="table table-hover text-center">
-        <thead class="table-primary">
-            <tr>
-                <th>Nombre</th>
-                <th>Rol</th>
-                <th>Correo</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($usuarios as $usuario)
+    <div class="table-responsive">
+        <table class="table table-hover text-center">
+            <thead class="table-primary">
                 <tr>
-                    <td>{{ $usuario->nombre }}</td>
-                    <td>{{ $usuario->rol }}</td>
-                    <td>{{ $usuario->correo }}</td>
-                    <td>
-                        <button class="btn btn-link p-0" onclick="openModal({{ $usuario->id_usuario }})">
-                            <i class="fa fa-pencil-alt text-primary fs-5"></i>
-                        </button>
-                    </td>
-                    <td>
-                        <form method="POST" action="{{ route('usuarios.destroy', $usuario->id_usuario) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('¿Desea eliminar este usuario?')" class="btn btn-link p-0">
-                                <i class="bx bx-trash-alt text-danger fs-4"></i>
-                            </button>
-                        </form>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Correo</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
-            @empty
-                <tr><td colspan="5">No hay usuarios</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse($usuarios as $usuario)
+                    <tr>
+                        <td>{{ $usuario->nombre }}</td>
+                        <td>{{ $usuario->rol }}</td>
+                        <td>{{ $usuario->correo }}</td>
+                        <td>
+                            <button class="btn btn-link p-0" onclick="openModal({{ $usuario->id_usuario }})">
+                                <i class="fa fa-pencil-alt text-primary fs-5"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ route('usuarios.destroy', $usuario->id_usuario) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('¿Desea eliminar este usuario?')" class="btn btn-link p-0">
+                                    <i class="bx bx-trash-alt text-danger fs-4"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="5">No hay usuarios</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
     <!-- Paginación -->
     {{ $usuarios->links() }}
@@ -146,6 +182,28 @@
         </div>
     </div>
 </div>
+
+<!-- Estilos -->
+<style>
+    .text-xs {
+        font-size: .75rem;
+    }
+    .fa-2x {
+        font-size: 2em;
+    }
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+</style>
 
 @endsection
 
