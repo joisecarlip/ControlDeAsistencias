@@ -21,7 +21,7 @@ class UsuarioController extends Controller
             $query->where('nombre', 'like', '%' . $request->nombre . '%');
         }
 
-        $usuarios = $query->paginate(10);
+        $usuarios = $query->paginate(50);
         
         $total = Usuario::count();
         $totalAdmin = Usuario::where('rol', 'administrador')->count();

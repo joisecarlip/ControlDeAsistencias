@@ -62,7 +62,11 @@
                                             @if($curso->horarios && $curso->horarios->count())
                                                 <div class="text-xs text-muted mb-2">
                                                     @foreach($curso->horarios as $horario)
-                                                        <div>{{ $horario->dia_semana }}: {{ $horario->hora_inicio }} - {{ $horario->hora_fin }}</div>
+                                                        <div>
+                                                            {{ $horario->dia_semana }}: 
+                                                            {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('g:i A') }} - 
+                                                            {{ \Carbon\Carbon::parse($horario->hora_fin)->format('g:i A') }}
+                                                        </div>
                                                     @endforeach
                                                 </div>
                                             @endif
@@ -224,6 +228,7 @@
 
 @push('scripts')
 <script>
+    
     let horarioIndex = 0;
 
     function openModal(cursoId) {
@@ -372,5 +377,70 @@
     function eliminarHorario(button) {
         button.closest('.mb-3').remove();
     }
+
+    function filtrarCursos() {
+        const nombreBusqueda = document.querySelector('input[name="nombre"]').value.toLowerCase().trim();
+        const codigoBusqueda = document.querySelector('input[name="codigo"]').value.toLowerCase().trim();
+        const cursoCards = document.querySelectorAll('.col-md-6.col-lg-4.mb-4'); // Seleccionar las tarjetas de cursos
+        
+        let cursosVisibles = 0;
+        
+        cursoCards.forEach(card => {
+            const nombreCurso = card.querySelector('h6.font-weight-bold').textContent.toLowerCase();
+            const codigoCurso = card.querySelector('p.text-muted.small').textContent.toLowerCase();
+            
+            const coincideNombre = nombreBusqueda === '' || nombreCurso.includes(nombreBusqueda);
+            const coincideCodigo = codigoBusqueda === '' || codigoCurso.includes(codigoBusqueda);
+            
+            if (coincideNombre && coincideCodigo) {
+                card.style.display = 'block';
+                cursosVisibles++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Mostrar mensaje si no hay resultados
+        mostrarMensajeSinResultados(cursosVisibles);
+    }
+
+    function mostrarMensajeSinResultados(cursosVisibles) {
+        const cardBody = document.querySelector('.card-body');
+        let mensajeSinResultados = document.getElementById('mensaje-sin-resultados');
+        
+        if (cursosVisibles === 0) {
+            if (!mensajeSinResultados) {
+                mensajeSinResultados = document.createElement('div');
+                mensajeSinResultados.id = 'mensaje-sin-resultados';
+                mensajeSinResultados.className = 'text-center py-4';
+                mensajeSinResultados.innerHTML = `
+                    <i class="bx bx-search fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-muted">No se encontraron cursos que coincidan con tu búsqueda</p>
+                `;
+                cardBody.appendChild(mensajeSinResultados);
+            }
+            mensajeSinResultados.style.display = 'block';
+        } else {
+            if (mensajeSinResultados) {
+                mensajeSinResultados.style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const nombreInput = document.querySelector('input[name="nombre"]');
+        const codigoInput = document.querySelector('input[name="codigo"]');
+        
+        // Búsqueda en tiempo real mientras se escribe
+        nombreInput.addEventListener('input', filtrarCursos);
+        codigoInput.addEventListener('input', filtrarCursos);
+        
+        // También mantener la funcionalidad del botón de búsqueda
+        const formBusqueda = document.querySelector('form[method="GET"]');
+        formBusqueda.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevenir envío del formulario
+            filtrarCursos(); // Usar la búsqueda en tiempo real
+        });
+    });
 </script>
 @endpush

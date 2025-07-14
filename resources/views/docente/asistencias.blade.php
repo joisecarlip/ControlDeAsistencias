@@ -316,6 +316,34 @@ function actualizarContador() {
     contTardanza.textContent = tardanzas;
 }
 
+function filtrarEstudiantes() {
+    const busqueda = document.getElementById('busqueda').value.toLowerCase().trim();
+    const estudiantesCards = document.querySelectorAll('.estudiante-card');
+    
+    estudiantesCards.forEach(card => {
+        const nombre = card.querySelector('h6').textContent.toLowerCase();
+        const codigo = card.querySelector('small').textContent.toLowerCase();
+        
+        if (nombre.includes(busqueda) || codigo.includes(busqueda)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Event listener para el input de búsqueda
+document.getElementById('busqueda').addEventListener('input', filtrarEstudiantes);
+
+// También puedes agregar búsqueda en tiempo real mientras se escribe
+document.getElementById('busqueda').addEventListener('keyup', filtrarEstudiantes);
+
+// Limpiar búsqueda cuando se cambie de curso
+cursoSelect.addEventListener('change', () => {
+    document.getElementById('busqueda').value = '';
+    // El resto del código del event listener existente...
+});
+
 document.getElementById('form-asistencia').addEventListener('submit', function (e) {
     e.preventDefault();
     const idCurso = cursoSelect.value;

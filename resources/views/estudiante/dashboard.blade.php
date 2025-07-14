@@ -214,7 +214,8 @@
                                                             <i class="bx bx-calendar"></i>
                                                             <span class="{{ strtolower($horario->dia_semana) == strtolower($hoy) ? 'text-success font-weight-bold' : 'text-muted' }}">
                                                                 {{ strtolower($horario->dia_semana) == strtolower($hoy) ? 'Hoy' : $horario->dia_semana }}
-                                                                — {{ $horario->hora_inicio }} - {{ $horario->hora_fin }}
+                                                                — {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('g:i A') }} - 
+                                                                {{ \Carbon\Carbon::parse($horario->hora_fin)->format('g:i A') }}
                                                             </span>
                                                         </div>
                                                     @endforeach

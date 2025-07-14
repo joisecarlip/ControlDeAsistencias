@@ -133,10 +133,8 @@
         </table>
     </div>
 
-    <!-- Paginación -->
-    {{ $usuarios->links() }}
-</div>
-
+    {{ $usuarios->appends(request()->query())->links() }}
+    
 <!-- Modal -->
 <div id="modal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -203,6 +201,7 @@
     .border-left-warning {
         border-left: 0.25rem solid #f6c23e !important;
     }
+    
 </style>
 
 @endsection

@@ -161,7 +161,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="graficoFechas" height="200"></canvas>
+                    <canvas id="graficoTendencia" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -335,7 +335,7 @@ new Chart(ctxCursos, {
 });
 
 function crearGraficoTendencia(dias = 7) {
-    const ctx = document.getElementById('graficoFechas').getContext('2d');
+    const ctx = document.getElementById('graficoTendencia').getContext('2d');
     const fechas = datosIniciales.fechas.slice(-dias);
     const presentes = datosIniciales.asistenciasPorFecha.slice(-dias);
     const tardanzas = datosIniciales.tardanzasPorFecha.slice(-dias);

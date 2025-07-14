@@ -70,7 +70,7 @@ class AsistenciaEstudianteController extends Controller
 
         // Obtener asistencias paginadas
         $asistencias = $query->orderBy('asistencias.fecha', 'desc')
-            ->paginate(20);
+            ->paginate(50);
 
         // Convertir a colección para usar en la vista
         $asistenciasCollection = collect($asistencias->items())->map(function($item) {

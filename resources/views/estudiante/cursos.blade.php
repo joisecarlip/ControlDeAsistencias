@@ -80,7 +80,7 @@
                                         @if($curso->horarios && $curso->horarios->count() > 0)
                                             <div class="text-xs text-muted mb-2">
                                                 @foreach($curso->horarios as $horario)
-                                                    <div>{{ $horario->dia_semana }}: {{ substr($horario->hora_inicio, 0, 5) }} - {{ substr($horario->hora_fin, 0, 5) }}</div>
+                                                    <div>{{ $horario->dia_semana }}: {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('g:i A') }} - {{ \Carbon\Carbon::parse($horario->hora_fin)->format('g:i A') }}</div>
                                                 @endforeach
                                             </div>
                                         @else

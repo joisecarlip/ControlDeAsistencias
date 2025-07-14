@@ -3,9 +3,9 @@
 @section('content')
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="card shadow-lg p-5 rounded-4" style="width: 100%; max-width: 480px;">
+        
         <div class="text-center mb-4">
-            <i class='bx bx-shield-quarter bx-lg text-primary mb-3'></i>
-            <h2 class="fw-bold">SISTEMA DE ASISTENCIAS</h2>
+            <img src="{{ asset('images/MiAsistencia-negro.png') }}" alt="Logo" class="mb-3" style="width: 60%;">
             <p class="text-muted">Inicia sesión para continuar</p>
         </div>
 
@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<!-- Boxicons CDN -->
+<!-- Boxicons -->
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 <script>

@@ -48,6 +48,10 @@
             background-color: #0056b3;
         }
 
+        aside img {
+            width: 75%;
+        }
+
         main {
             margin-left: 320px;
             padding: 20px;
@@ -63,6 +67,9 @@
 
     <!-- Menú lateral -->
     <aside>
+        <div class="text-center mb-4">
+            <img src="{{ asset('images/MiAsistencia-blanco.png') }}" alt="Logo" width="120">
+        </div>
         <nav>
             <ul>
                 <li><a href="{{ route('perfil') }}"><i class="bx bx-user-circle"></i> Mi perfil </a></li>

@@ -45,29 +45,26 @@ class ReporteController extends Controller
         }
 
         // Gráfico últimos 7 días
-        $fechas = [];
+        $fechas = collect();
         $asistenciasPorFecha = [];
         $tardanzasPorFecha = [];
         $ausentesPorFecha = [];
 
-        for ($i = 6; $i >= 0; $i--) {
-            $fecha = Carbon::now()->subDays($i);
-            $fechaFormateada = $fecha->format('Y-m-d');
-            $fechaLabel = $fecha->format('d/m');
-            
-            $fechas[] = $fechaLabel;
-            
-            $asistenciasPorFecha[] = Asistencia::whereDate('fecha', $fechaFormateada)
-                ->where('estado', 'presente')
-                ->count();
-                
-            $tardanzasPorFecha[] = Asistencia::whereDate('fecha', $fechaFormateada)
-                ->where('estado', 'tardanza')
-                ->count();
-                
-            $ausentesPorFecha[] = Asistencia::whereDate('fecha', $fechaFormateada)
-                ->where('estado', 'ausente')
-                ->count();
+        for ($i = 29; $i >= 0; $i--) {
+            $fecha = Carbon::today()->subDays($i)->toDateString();
+            $fechas->push($fecha);
+
+            $asistenciasPorFecha[] = Asistencia::whereIn('id_curso', $cursos->pluck('id_curso'))
+                ->whereDate('fecha', $fecha)
+                ->where('estado', 'presente')->count();
+
+            $tardanzasPorFecha[] = Asistencia::whereIn('id_curso', $cursos->pluck('id_curso'))
+                ->whereDate('fecha', $fecha)
+                ->where('estado', 'tardanza')->count();
+
+            $ausentesPorFecha[] = Asistencia::whereIn('id_curso', $cursos->pluck('id_curso'))
+                ->whereDate('fecha', $fecha)
+                ->where('estado', 'ausente')->count();
         }
 
         // Gráfico por horas (análisis de puntualidad)

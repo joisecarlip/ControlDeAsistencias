@@ -175,8 +175,8 @@
                                     $horario = $asistencia->curso->horarios->first();
                                 @endphp
                                 <div class="font-weight">
-                                    {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('H:i') }} - 
-                                    {{ \Carbon\Carbon::parse($horario->hora_fin)->format('H:i') }}
+                                    {{ \Carbon\Carbon::parse($horario->hora_inicio)->format('g:i A') }} - 
+                                    {{ \Carbon\Carbon::parse($horario->hora_fin)->format('g:i A') }}
                                 </div>
                             @else
                                 <small class="text-muted">No definido</small>
@@ -219,17 +219,7 @@
             </tbody>
         </table>
     </div>
-
-    <!-- Paginación -->
-    @if($asistencias->count() > 0)
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Mostrando {{ $asistencias->firstItem() }} a {{ $asistencias->lastItem() }} 
-                de {{ $asistencias->total() }} registros
-            </div>
-            {{ $asistencias->appends(request()->query())->links() }}
-        </div>
-    @endif
+    
 </div>
 
 <!-- Estilos -->
